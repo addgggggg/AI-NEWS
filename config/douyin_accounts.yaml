@@ -1,0 +1,6 @@
+accounts:
+  - name: 示例AI账号
+    profile_url: "https://www.douyin.com/user/REPLACE_ME"
+    sec_uid: ""
+    weight: 1.0
+    enabled: false

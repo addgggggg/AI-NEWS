@@ -1,0 +1,71 @@
+schedule:
+  timezone: Asia/Shanghai
+  daily_run_at: "08:30"
+
+storage:
+  sqlite_path: ./ai_news.db
+  temp_report_dir: ./tmp/reports
+  delete_after_success: true
+  keep_failed_tmp_hours: 24
+
+dedupe:
+  enabled: true
+  retention_days: 7
+  store_only_hash: true
+
+keywords:
+  - AI
+  - 人工智能
+  - 大模型
+  - AIGC
+  - OpenAI
+  - ChatGPT
+  - DeepSeek
+  - Kimi
+  - 豆包
+  - 通义千问
+  - 智能体
+  - 视频生成
+  - 英伟达
+
+bilibili:
+  enabled: true
+  max_results_per_keyword: 20
+  request_interval_seconds: 1
+
+douyin:
+  enabled: true
+  mode: account_watch
+  accounts_file: ./config/douyin_accounts.yaml
+  request_interval_seconds: 5
+
+delivery:
+  feishu:
+    enabled: true
+    webhook_env: FEISHU_WEBHOOK
+
+summary:
+  # 可选：
+  # openai_compatible：标准 /v1/chat/completions，适用于 OpenAI、DeepSeek、通义兼容模式、硅基流动等
+  # openai：等同 openai_compatible，base_url 默认 https://api.openai.com/v1
+  # ollama：本地 Ollama /api/chat
+  # none：不调用模型，使用降级摘要
+  provider: openai_compatible
+  model: ""
+  model_env: LLM_MODEL
+  api_key_env: LLM_API_KEY
+  base_url_env: LLM_BASE_URL
+  timeout_seconds: 60
+  max_items: 40
+
+healthcheck:
+  enabled: true
+  check_config: true
+  check_database: true
+  check_feishu: true
+  check_collectors: false
+
+cleanup:
+  enabled: true
+  run_after_job: true
+  log_retention_days: 14

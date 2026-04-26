@@ -1,0 +1,11 @@
+services:
+  ai-news-agent:
+    build: .
+    env_file: .env
+    volumes:
+      - ./ai_news.db:/app/ai_news.db
+      - ./tmp:/app/tmp
+      - ./logs:/app/logs
+      - ./config.yaml:/app/config.yaml
+      - ./config:/app/config
+    restart: unless-stopped

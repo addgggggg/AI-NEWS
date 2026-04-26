@@ -1,0 +1,12 @@
+accounts:
+  - name: 填入抖音账号名称
+    profile_url: "填入抖音账号主页链接"
+    sec_uid: ""
+    weight: 1.0
+    enabled: true
+
+  - name: 填入第二个抖音账号名称
+    profile_url: "填入第二个抖音账号主页链接"
+    sec_uid: ""
+    weight: 1.0
+    enabled: true
