@@ -7,3 +7,4 @@ logs/*.log
 logs/*.log.*
 tmp/reports/
 填写配置/必填配置清单.md
+config/douyin_accounts.local.yaml

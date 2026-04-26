@@ -110,7 +110,7 @@ Bilibili 采集器使用公开搜索接口，已经做了：
 
 ### 抖音
 
-抖音第一版只做指定账号公开主页监控。由于抖音页面结构经常变化，当前解析器只提取公开 HTML 中可见的视频链接。后续如果你提供实际账号 URL，需要用 dry-run 验证返回效果：
+抖音第一版只做指定账号公开主页监控。由于抖音页面结构经常变化，当前解析器只提取公开页面中可见的视频链接。后续如果你提供实际账号 URL，需要用 dry-run 验证返回效果：
 
 ```powershell
 python run.py dry-run --collector douyin
@@ -124,6 +124,8 @@ python run.py dry-run --collector douyin
 登录态抓取
 高频访问
 ```
+
+如果 dry-run 日志出现 `douyin_account_blocked_by_captcha`，说明当前环境拿到的是验证码中间页，系统会跳过该账号，不会尝试绕过。
 
 ## 下一步建议
 

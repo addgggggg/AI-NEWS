@@ -109,7 +109,12 @@ def collect_all(settings) -> list:
         )
         items.extend(collector.collect(keywords))
     if settings.get("douyin", "enabled", default=True):
-        collector = DouyinCollector(interval_seconds=settings.get("douyin", "request_interval_seconds", default=5))
+        collector = DouyinCollector(
+            interval_seconds=settings.get("douyin", "request_interval_seconds", default=5),
+            render_with_browser=settings.get("douyin", "render_with_browser", default=False),
+            browser_headless=settings.get("douyin", "browser_headless", default=True),
+            browser_wait_seconds=settings.get("douyin", "browser_wait_seconds", default=8),
+        )
         items.extend(collector.collect(load_douyin_accounts(settings)))
     return items
 
@@ -119,7 +124,12 @@ def run_dry_run(settings, args) -> None:
         items = BilibiliCollector(max_results_per_keyword=3).collect(settings.get("keywords", default=[])[:2])
         print(f"Bilibili dry-run items: {len(items)}")
     elif args.collector == "douyin":
-        items = DouyinCollector(interval_seconds=1).collect(load_douyin_accounts(settings))
+        items = DouyinCollector(
+            interval_seconds=1,
+            render_with_browser=settings.get("douyin", "render_with_browser", default=False),
+            browser_headless=settings.get("douyin", "browser_headless", default=True),
+            browser_wait_seconds=settings.get("douyin", "browser_wait_seconds", default=8),
+        ).collect(load_douyin_accounts(settings))
         print(f"Douyin dry-run items: {len(items)}")
     elif args.summary:
         report = summarize([], llm_config=get_llm_config(settings))

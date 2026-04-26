@@ -1,6 +1,6 @@
 schedule:
   timezone: Asia/Shanghai
-  daily_run_at: "08:30"
+  daily_run_at: "12：00"
 
 storage:
   sqlite_path: ./ai_news.db
@@ -36,8 +36,11 @@ bilibili:
 douyin:
   enabled: true
   mode: account_watch
-  accounts_file: ./config/douyin_accounts.yaml
+  accounts_file: ./config/douyin_accounts.local.yaml
   request_interval_seconds: 5
+  render_with_browser: true
+  browser_headless: true
+  browser_wait_seconds: 8
 
 delivery:
   feishu:

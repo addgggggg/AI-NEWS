@@ -75,7 +75,7 @@ python run.py schedule
 编辑：
 
 ```text
-config/douyin_accounts.yaml
+config/douyin_accounts.local.yaml
 ```
 
 格式：
@@ -90,6 +90,7 @@ accounts:
 ```
 
 第一版至少填写 `name` 和 `profile_url`。
+`config/douyin_accounts.local.yaml` 会被 Git 忽略，避免把你的账号列表提交到 GitHub。可以从 `config/douyin_accounts.yaml` 复制一份后再填写。
 
 ## 检测命令
 
