@@ -10,6 +10,7 @@ SQLite 初始化
 job_runs / dedupe_hashes / health_checks 表
 健康检查命令
 清理命令
+联网后每日一次自动运行模式
 Bilibili 关键词采集器
 抖音指定账号采集器骨架
 标准化 pipeline

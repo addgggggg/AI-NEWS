@@ -2,8 +2,12 @@ from __future__ import annotations
 
 import argparse
 import logging
+import time
 from datetime import date, datetime, timezone
 from pathlib import Path
+from zoneinfo import ZoneInfo
+
+import httpx
 
 from app.cleanup import cleanup as cleanup_task
 from app.collectors.bilibili import BilibiliCollector
@@ -24,7 +28,7 @@ from app.scheduler import start_scheduler
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="AI News Agent")
-    parser.add_argument("command", choices=["init-db", "once", "schedule", "healthcheck", "cleanup", "dry-run"])
+    parser.add_argument("command", choices=["init-db", "once", "auto", "schedule", "healthcheck", "cleanup", "dry-run"])
     parser.add_argument("--collector", choices=["bilibili", "douyin"])
     parser.add_argument("--summary", action="store_true")
     parser.add_argument("--delivery", action="store_true")
@@ -57,6 +61,10 @@ def main() -> None:
         init_db(db_path)
         run_once(settings, db_path)
         return
+    if args.command == "auto":
+        init_db(db_path)
+        run_auto(settings, db_path)
+        return
     if args.command == "schedule":
         init_db(db_path)
         start_scheduler(settings, lambda: run_once(settings, db_path))
@@ -65,7 +73,7 @@ def main() -> None:
 def run_once(settings, db_path: Path) -> None:
     logger = logging.getLogger("app")
     started_at = datetime.now(timezone.utc)
-    job_id = create_job_run(db_path, started_at)
+    job_id = create_job_run(db_path, started_at, today_for_settings(settings))
     report_path: Path | None = None
     delivered = False
     selected_count = 0
@@ -97,6 +105,70 @@ def run_once(settings, db_path: Path) -> None:
     finally:
         if settings.get("cleanup", "run_after_job", default=True):
             run_cleanup(settings, db_path)
+
+
+def run_auto(settings, db_path: Path) -> None:
+    logger = logging.getLogger("app")
+    interval_seconds = settings.get("auto_run", "check_interval_seconds", default=1800)
+    start_delay_seconds = settings.get("auto_run", "start_delay_seconds", default=0)
+    logger.info("auto_run_started interval_seconds=%s start_delay_seconds=%s", interval_seconds, start_delay_seconds)
+    if start_delay_seconds:
+        time.sleep(start_delay_seconds)
+    while True:
+        try:
+            today = today_for_settings(settings)
+            if has_successful_delivery(db_path, today):
+                logger.info("auto_run_skip reason=already_delivered today=%s", today)
+            elif internet_available(settings):
+                logger.info("auto_run_trigger today=%s", today)
+                run_once(settings, db_path)
+            else:
+                logger.info("auto_run_wait reason=network_unavailable today=%s", today)
+        except KeyboardInterrupt:
+            logger.info("auto_run_stopped")
+            raise
+        except Exception as exc:
+            logger.exception("auto_run_loop_error error=%s", exc)
+        time.sleep(interval_seconds)
+
+
+def today_for_settings(settings) -> str:
+    timezone_name = settings.get("schedule", "timezone", default="Asia/Shanghai")
+    return datetime.now(ZoneInfo(timezone_name)).date().isoformat()
+
+
+def has_successful_delivery(db_path: Path, job_date: str) -> bool:
+    with transaction(db_path) as conn:
+        row = conn.execute(
+            """
+            SELECT 1
+            FROM job_runs
+            WHERE job_date = ? AND status = 'success' AND delivered = 1
+            LIMIT 1
+            """,
+            (job_date,),
+        ).fetchone()
+    return row is not None
+
+
+def internet_available(settings) -> bool:
+    urls = settings.get("auto_run", "network_check_urls", default=["https://www.bilibili.com", "https://open.feishu.cn"])
+    timeout_seconds = settings.get("auto_run", "network_check_timeout_seconds", default=8)
+    headers = {
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/124.0.0.0 Safari/537.36"
+        )
+    }
+    for url in urls:
+        try:
+            response = httpx.get(url, headers=headers, timeout=timeout_seconds, follow_redirects=True)
+            if response.status_code < 500:
+                return True
+        except Exception:
+            continue
+    return False
 
 
 def collect_all(settings) -> list:
@@ -184,11 +256,11 @@ def remove_report_dir(path: Path) -> None:
     path.rmdir()
 
 
-def create_job_run(db_path: Path, started_at: datetime) -> int:
+def create_job_run(db_path: Path, started_at: datetime, job_date: str) -> int:
     with transaction(db_path) as conn:
         cursor = conn.execute(
             "INSERT INTO job_runs(job_date, started_at, status) VALUES (?, ?, ?)",
-            (date.today().isoformat(), started_at.isoformat(), "running"),
+            (job_date, started_at.isoformat(), "running"),
         )
         return int(cursor.lastrowid)
 

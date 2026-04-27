@@ -67,8 +67,18 @@ summary:
 python run.py init-db
 python run.py healthcheck
 python run.py once
-python run.py schedule
+python run.py auto
 ```
+
+`auto` 模式不按固定时间发送。它会循环检查网络和今天是否已经成功发送：
+
+```text
+网络不可用：等待下次检查
+网络可用且今天未成功发送：采集、总结、推送飞书
+今天已成功发送：当天不再重复发送
+```
+
+检查间隔在 `config.yaml` 的 `auto_run.check_interval_seconds` 中配置。
 
 ## 抖音账号配置
 

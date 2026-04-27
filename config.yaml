@@ -2,6 +2,16 @@ schedule:
   timezone: Asia/Shanghai
   daily_run_at: "12：00"
 
+auto_run:
+  # 不按固定时间发送；程序联网后检查今天是否已经成功发送。
+  # 未成功发送时自动执行；成功后当天不再重复。
+  check_interval_seconds: 1800
+  start_delay_seconds: 0
+  network_check_timeout_seconds: 8
+  network_check_urls:
+    - https://www.bilibili.com
+    - https://open.feishu.cn
+
 storage:
   sqlite_path: ./ai_news.db
   temp_report_dir: ./tmp/reports

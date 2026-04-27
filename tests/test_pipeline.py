@@ -12,6 +12,7 @@ from app.pipeline.dedupe import filter_new_items
 from app.pipeline.filter import filter_ai_related
 from app.pipeline.normalize import normalize_items
 from app.pipeline.rank import rank_items
+from run import has_successful_delivery
 
 
 class PipelineTest(unittest.TestCase):
@@ -64,6 +65,23 @@ class PipelineTest(unittest.TestCase):
         )
         ranked = rank_items([old, fresh], ["OpenAI", "大模型"])
         self.assertEqual(ranked[0].external_id, "fresh")
+
+    def test_has_successful_delivery(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            db_path = Path(tmp) / "test.db"
+            init_db(db_path)
+            conn = sqlite3.connect(db_path)
+            conn.execute(
+                """
+                INSERT INTO job_runs(job_date, started_at, status, delivered)
+                VALUES (?, ?, ?, ?)
+                """,
+                ("2026-04-27", "2026-04-27T00:00:00+08:00", "success", 1),
+            )
+            conn.commit()
+            conn.close()
+            self.assertTrue(has_successful_delivery(db_path, "2026-04-27"))
+            self.assertFalse(has_successful_delivery(db_path, "2026-04-28"))
 
 
 if __name__ == "__main__":
