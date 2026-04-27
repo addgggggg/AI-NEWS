@@ -72,7 +72,7 @@ FEISHU_WEBHOOK=你的飞书机器人 webhook
 配置抖音账号：
 
 ```text
-config/douyin_accounts.yaml
+config/douyin_accounts.local.yaml
 ```
 
 示例：
@@ -138,5 +138,5 @@ python run.py dry-run --collector douyin
 5. 配置 LLM_API_KEY / LLM_MODEL / LLM_BASE_URL
 6. 运行 python run.py once
 7. 确认飞书收到日报
-8. 再启动 python run.py schedule
+8. 再启动 python run.py auto
 ```

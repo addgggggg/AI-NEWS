@@ -1,6 +1,5 @@
-schedule:
+runtime:
   timezone: Asia/Shanghai
-  daily_run_at: "12：00"
 
 auto_run:
   # 不按固定时间发送；程序联网后检查今天是否已经成功发送。

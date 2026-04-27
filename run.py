@@ -23,12 +23,11 @@ from app.pipeline.filter import filter_ai_related
 from app.pipeline.normalize import normalize_items
 from app.pipeline.rank import rank_items
 from app.pipeline.summarize import LLMConfig, summarize
-from app.scheduler import start_scheduler
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="AI News Agent")
-    parser.add_argument("command", choices=["init-db", "once", "auto", "schedule", "healthcheck", "cleanup", "dry-run"])
+    parser.add_argument("command", choices=["init-db", "once", "auto", "healthcheck", "cleanup", "dry-run"])
     parser.add_argument("--collector", choices=["bilibili", "douyin"])
     parser.add_argument("--summary", action="store_true")
     parser.add_argument("--delivery", action="store_true")
@@ -65,9 +64,6 @@ def main() -> None:
         init_db(db_path)
         run_auto(settings, db_path)
         return
-    if args.command == "schedule":
-        init_db(db_path)
-        start_scheduler(settings, lambda: run_once(settings, db_path))
 
 
 def run_once(settings, db_path: Path) -> None:
@@ -133,7 +129,7 @@ def run_auto(settings, db_path: Path) -> None:
 
 
 def today_for_settings(settings) -> str:
-    timezone_name = settings.get("schedule", "timezone", default="Asia/Shanghai")
+    timezone_name = settings.get("runtime", "timezone", default="Asia/Shanghai")
     return datetime.now(ZoneInfo(timezone_name)).date().isoformat()
 
 
