@@ -67,7 +67,7 @@ summary:
   model_env: LLM_MODEL
   api_key_env: LLM_API_KEY
   base_url_env: LLM_BASE_URL
-  timeout_seconds: 60
+  timeout_seconds: 180
   max_items: 40
 
 healthcheck:

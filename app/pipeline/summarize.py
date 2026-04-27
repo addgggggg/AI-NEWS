@@ -13,25 +13,44 @@ from app.collectors.base import CollectedItem
 logger = logging.getLogger("summary")
 
 
-PROMPT = """你是一个 AI 行业新闻分析师。
+PROMPT = """你是一个 AI 行业新闻编辑，负责把短视频和视频平台信息整理成一份纯文字中文简报。
 
-请根据下面的视频和新闻条目，生成一份中文 AI 新闻日报。
+请根据下面的条目生成一份“纯文字版 AI 新闻简报”。
 
-要求：
-1. 不要逐条复述，要合并相同事件。
-2. 优先关注模型发布、产品更新、公司动态、监管政策、产业融资、技术突破。
-3. 过滤营销、带货、重复搬运和低信息密度内容。
-4. 每条重点新闻说明为什么重要。
-5. 保留来源链接。
-6. 如果信息不足，要标注“待确认”。
+硬性要求：
+1. 只输出纯文本，不使用 Markdown 表格，不使用加粗、标题符号、代码块或复杂排版。
+2. 不要逐条搬运标题，要把相同或相近事件合并成一条新闻。
+3. 优先保留模型发布、产品更新、公司动态、监管政策、产业融资、技术突破和高质量观点。
+4. 过滤纯营销、卖课、标题党、重复搬运、低信息密度内容。
+5. 每条重点新闻用 2-4 句话说明：发生了什么、为什么重要、信息是否待确认。
+6. 不要编造条目中没有的信息；无法确认时写“待确认”。
+7. 每条新闻末尾保留 1-2 个来源链接。
+8. 控制篇幅，整份简报建议 800-1500 字。
 
-输出结构：
-- 今日重点
-- 产品与模型动态
-- 国内 AI 动态
-- 海外 AI 动态
-- 热门视频
-- 值得继续关注
+输出格式必须如下：
+
+AI 新闻简报（YYYY-MM-DD）
+
+一、今日重点
+1. 标题
+   摘要：……
+   重要性：……
+   来源：……
+
+二、产品与模型动态
+1. ……
+
+三、国内 AI 动态
+1. ……
+
+四、海外 AI 动态
+1. ……
+
+五、值得关注的视频
+1. ……
+
+六、继续关注
+1. ……
 """
 
 
@@ -148,13 +167,17 @@ def _format_items(items: list[CollectedItem]) -> str:
 
 def _fallback_summary(items: list[CollectedItem]) -> str:
     today = date.today().isoformat()
-    lines = [f"# AI 新闻日报 - {today}", "", "## 今日重点"]
+    lines = [f"AI 新闻简报（{today}）", "", "一、今日重点"]
     if not items:
-        lines.append("- 今日未采集到足够 AI 相关新闻。")
+        lines.append("1. 今日未采集到足够 AI 相关新闻。")
     else:
-        for item in items[:10]:
-            lines.append(f"- [{item.platform}] {item.title} - {item.author}：{item.url}")
-    lines.extend(["", "## 产品与模型动态", "- 待模型总结。", "", "## 热门视频"])
-    for item in items[:10]:
-        lines.append(f"- {item.title}：{item.url}")
+        for index, item in enumerate(items[:8], start=1):
+            lines.append(f"{index}. {item.title}")
+            lines.append(f"   摘要：来自 {item.platform} 的相关内容，作者为 {item.author or '未知'}。")
+            lines.append("   重要性：模型服务不可用，当前为降级摘要，未进行深度合并分析。")
+            lines.append(f"   来源：{item.url}")
+    lines.extend(["", "二、产品与模型动态", "1. 待模型总结。", "", "三、国内 AI 动态", "1. 待模型总结。", "", "四、海外 AI 动态", "1. 待模型总结。", "", "五、值得关注的视频"])
+    for index, item in enumerate(items[:8], start=1):
+        lines.append(f"{index}. {item.title}。来源：{item.url}")
+    lines.extend(["", "六、继续关注", "1. 建议检查 LLM 配置，以获得完整的事件合并和行业分析。"])
     return "\n".join(lines)

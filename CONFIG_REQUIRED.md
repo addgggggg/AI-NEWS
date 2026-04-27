@@ -86,3 +86,24 @@ scripts\run_once.ps1
 ```powershell
 scripts\run_auto.ps1
 ```
+
+## 简报格式
+
+系统会让模型输出纯文字版简报，不使用表格或复杂 Markdown。格式包括：
+
+```text
+AI 新闻简报（日期）
+一、今日重点
+二、产品与模型动态
+三、国内 AI 动态
+四、海外 AI 动态
+五、值得关注的视频
+六、继续关注
+```
+
+如果模型响应较慢，可以在 `config.yaml` 中调大：
+
+```yaml
+summary:
+  timeout_seconds: 180
+```
