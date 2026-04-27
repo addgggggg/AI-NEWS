@@ -4,15 +4,39 @@
 
 ## 快速开始
 
+一行安装：
+
 ```powershell
-cd "AI News"
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
-Copy-Item .env.example .env
+git clone https://github.com/addgggggg/AI-NEWS.git; cd AI-NEWS; powershell -ExecutionPolicy Bypass -File scripts\install.ps1
 ```
 
-如果只是本地验证，也可以直接使用系统 Python 运行。
+分步安装：
+
+```powershell
+git clone https://github.com/addgggggg/AI-NEWS.git
+cd AI-NEWS
+powershell -ExecutionPolicy Bypass -File scripts\install.ps1
+```
+
+安装完成后，按 [CONFIG_REQUIRED.md](CONFIG_REQUIRED.md) 填写 `.env` 和 `config/douyin_accounts.local.yaml`。
+
+检查配置：
+
+```powershell
+scripts\healthcheck.ps1
+```
+
+手动跑一次：
+
+```powershell
+scripts\run_once.ps1
+```
+
+联网后每日自动跑一次：
+
+```powershell
+scripts\run_auto.ps1
+```
 
 ## 配置 LLM
 
@@ -69,6 +93,8 @@ python run.py healthcheck
 python run.py once
 python run.py auto
 ```
+
+也可以使用 `scripts/` 里的 PowerShell 脚本运行。
 
 `auto` 模式不按固定时间发送。它会循环检查网络和今天是否已经成功发送：
 
@@ -129,4 +155,5 @@ python run.py cleanup
 Implementation-Status.md
 Code-Implementation-Plan.md
 AI-News-Agent-Plan.md
+CONFIG_REQUIRED.md
 ```

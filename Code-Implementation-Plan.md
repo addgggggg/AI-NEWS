@@ -28,6 +28,16 @@ python run.py dry-run --summary
 python run.py dry-run --delivery
 ```
 
+面向非开发用户的 PowerShell 脚本：
+
+```text
+scripts/install.ps1
+scripts/healthcheck.ps1
+scripts/run_once.ps1
+scripts/run_auto.ps1
+scripts/dry_run_douyin.ps1
+```
+
 ## 日志规划
 
 日志目录：
