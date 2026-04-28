@@ -36,6 +36,12 @@ scripts/healthcheck.ps1
 scripts/run_once.ps1
 scripts/run_auto.ps1
 scripts/dry_run_douyin.ps1
+scripts/install_startup_task.ps1
+scripts/start_startup_task.ps1
+scripts/startup_task_status.ps1
+scripts/uninstall_startup_task.ps1
+scripts/install_startup_shortcut.ps1
+scripts/uninstall_startup_shortcut.ps1
 ```
 
 ## 日志规划

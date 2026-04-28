@@ -87,6 +87,32 @@ scripts\run_once.ps1
 scripts\run_auto.ps1
 ```
 
+## 开机/登录后自动运行
+
+安装 Windows 登录自启动，推荐不需要管理员权限的启动文件夹方式：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\install_startup_shortcut.ps1
+```
+
+卸载启动文件夹自启动：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\uninstall_startup_shortcut.ps1
+```
+
+如需使用 Windows 计划任务，可以尝试：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\install_startup_task.ps1
+```
+
+部分系统注册计划任务需要管理员权限。
+
+```powershell
+scripts\uninstall_startup_task.ps1
+```
+
 ## 简报格式
 
 系统会让模型输出纯文字版简报，不使用表格或复杂 Markdown。格式包括：
