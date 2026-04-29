@@ -42,6 +42,48 @@ bilibili:
   max_results_per_keyword: 20
   request_interval_seconds: 1
 
+rss_sources:
+  enabled: true
+  max_items_per_source: 10
+  request_interval_seconds: 1
+  sources:
+    - name: OpenAI Blog
+      url: "https://openai.com/blog/rss.xml"
+      weight: 1.4
+      enabled: true
+    - name: Anthropic News
+      url: "https://www.anthropic.com/news/rss.xml"
+      weight: 1.4
+      enabled: false
+    - name: Google DeepMind Blog
+      url: "https://deepmind.google/blog/rss.xml"
+      weight: 1.3
+      enabled: true
+    - name: Hugging Face Blog
+      url: "https://huggingface.co/blog/feed.xml"
+      weight: 1.2
+      enabled: true
+    - name: NVIDIA Blog AI
+      url: "https://blogs.nvidia.com/blog/category/deep-learning/feed/"
+      weight: 1.2
+      enabled: true
+    - name: Microsoft AI Blog
+      url: "https://blogs.microsoft.com/ai/feed/"
+      weight: 1.1
+      enabled: true
+    - name: arXiv cs.AI
+      url: "https://export.arxiv.org/rss/cs.AI"
+      weight: 1.0
+      enabled: true
+    - name: arXiv cs.CL
+      url: "https://export.arxiv.org/rss/cs.CL"
+      weight: 1.0
+      enabled: true
+    - name: arXiv cs.LG
+      url: "https://export.arxiv.org/rss/cs.LG"
+      weight: 1.0
+      enabled: true
+
 douyin:
   enabled: true
   mode: account_watch

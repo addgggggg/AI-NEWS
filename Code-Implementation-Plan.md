@@ -23,6 +23,7 @@ python run.py auto
 python run.py healthcheck
 python run.py cleanup
 python run.py dry-run --collector bilibili
+python run.py dry-run --collector rss
 python run.py dry-run --collector douyin
 python run.py dry-run --summary
 python run.py dry-run --delivery

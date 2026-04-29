@@ -7,6 +7,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from app.collectors.base import CollectedItem
+from app.collectors.rss import _clean_text
 from app.db.models import init_db
 from app.pipeline.dedupe import filter_new_items
 from app.pipeline.filter import filter_ai_related
@@ -82,6 +83,9 @@ class PipelineTest(unittest.TestCase):
             conn.close()
             self.assertTrue(has_successful_delivery(db_path, "2026-04-27"))
             self.assertFalse(has_successful_delivery(db_path, "2026-04-28"))
+
+    def test_rss_clean_text(self) -> None:
+        self.assertEqual(_clean_text("AI&nbsp;news\n update"), "AI news update")
 
 
 if __name__ == "__main__":

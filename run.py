@@ -12,6 +12,7 @@ import httpx
 from app.cleanup import cleanup as cleanup_task
 from app.collectors.bilibili import BilibiliCollector
 from app.collectors.douyin import DouyinCollector
+from app.collectors.rss import RssCollector
 from app.config import load_douyin_accounts, load_settings
 from app.db.models import init_db
 from app.db.session import transaction
@@ -28,7 +29,7 @@ from app.pipeline.summarize import LLMConfig, summarize
 def main() -> None:
     parser = argparse.ArgumentParser(description="AI News Agent")
     parser.add_argument("command", choices=["init-db", "once", "auto", "healthcheck", "cleanup", "dry-run"])
-    parser.add_argument("--collector", choices=["bilibili", "douyin"])
+    parser.add_argument("--collector", choices=["bilibili", "douyin", "rss"])
     parser.add_argument("--summary", action="store_true")
     parser.add_argument("--delivery", action="store_true")
     args = parser.parse_args()
@@ -176,6 +177,13 @@ def collect_all(settings) -> list:
             interval_seconds=settings.get("bilibili", "request_interval_seconds", default=1),
         )
         items.extend(collector.collect(keywords))
+    if settings.get("rss_sources", "enabled", default=True):
+        collector = RssCollector(
+            max_items_per_source=settings.get("rss_sources", "max_items_per_source", default=10),
+            interval_seconds=settings.get("rss_sources", "request_interval_seconds", default=1),
+        )
+        sources = settings.get("rss_sources", "sources", default=[])
+        items.extend(collector.collect(sources))
     if settings.get("douyin", "enabled", default=True):
         collector = DouyinCollector(
             interval_seconds=settings.get("douyin", "request_interval_seconds", default=5),
@@ -191,6 +199,11 @@ def run_dry_run(settings, args) -> None:
     if args.collector == "bilibili":
         items = BilibiliCollector(max_results_per_keyword=3).collect(settings.get("keywords", default=[])[:2])
         print(f"Bilibili dry-run items: {len(items)}")
+    elif args.collector == "rss":
+        items = RssCollector(max_items_per_source=3, interval_seconds=0).collect(
+            settings.get("rss_sources", "sources", default=[])[:5]
+        )
+        print(f"RSS dry-run items: {len(items)}")
     elif args.collector == "douyin":
         items = DouyinCollector(
             interval_seconds=1,
@@ -206,7 +219,7 @@ def run_dry_run(settings, args) -> None:
         ok = send_text("AI News Agent 测试消息", settings.get("delivery", "feishu", "webhook_env", default="FEISHU_WEBHOOK"))
         print(f"Feishu delivery dry-run: {ok}")
     else:
-        print("Specify --collector bilibili|douyin, --summary, or --delivery.")
+        print("Specify --collector bilibili|douyin|rss, --summary, or --delivery.")
 
 
 def run_cleanup(settings, db_path: Path) -> None:

@@ -150,11 +150,35 @@ accounts:
 
 ```powershell
 python run.py dry-run --collector bilibili
+python run.py dry-run --collector rss
 python run.py dry-run --collector douyin
 python run.py dry-run --summary
 python run.py dry-run --delivery
 python run.py cleanup
 ```
+
+## 信息源
+
+当前默认信息源：
+
+```text
+Bilibili 关键词搜索
+RSS 官方/研究源
+抖音指定账号
+```
+
+RSS 源在 `config.yaml` 的 `rss_sources` 中配置，默认包含：
+
+```text
+OpenAI Blog
+Google DeepMind Blog
+Hugging Face Blog
+NVIDIA Blog AI
+Microsoft AI Blog
+arXiv cs.AI / cs.CL / cs.LG
+```
+
+Anthropic 官方 RSS 当前解析不稳定，默认禁用；如果后续有稳定 feed，可以再启用或替换。
 
 ## 存储策略
 

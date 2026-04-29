@@ -15,7 +15,7 @@
   ↓
 检查今天是否已成功发送
   ↓
-未发送且联网：采集 Bilibili + 抖音
+未发送且联网：采集 Bilibili + RSS + 抖音
   ↓
 内存中清洗、标准化
   ↓
@@ -73,6 +73,25 @@ python run.py dry-run --delivery
 关键词搜索
 按发布时间排序
 单关键词失败不影响整体任务
+```
+
+### RSS
+
+```text
+官方模型/公司博客
+研究论文源
+开源和开发者源
+```
+
+默认启用：
+
+```text
+OpenAI Blog
+Google DeepMind Blog
+Hugging Face Blog
+NVIDIA Blog AI
+Microsoft AI Blog
+arXiv cs.AI / cs.CL / cs.LG
 ```
 
 ### 抖音
