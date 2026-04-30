@@ -103,6 +103,45 @@ summary:
 
 系统会使用降级摘要。
 
+### 快速切换模型
+
+项目内置了常见模型配置模板：
+
+```text
+config/model_profiles.yaml
+```
+
+查看可用模板：
+
+```powershell
+scripts\switch_model.ps1 -List
+```
+
+切换模型：
+
+```powershell
+scripts\switch_model.ps1 -Profile deepseek
+scripts\switch_model.ps1 -Profile kimi
+scripts\switch_model.ps1 -Profile zhipu
+scripts\switch_model.ps1 -Profile qwen-plus
+scripts\switch_model.ps1 -Profile ollama-qwen
+```
+
+切换脚本只会修改 `.env` 里的：
+
+```text
+LLM_MODEL
+LLM_BASE_URL
+```
+
+不会修改 `LLM_API_KEY`。切换到不同服务商后，需要把 `.env` 里的 `LLM_API_KEY` 换成对应服务商的 key。
+
+测试当前模型是否可用：
+
+```powershell
+scripts\test_model.ps1
+```
+
 ## 初始化和运行
 
 ```powershell

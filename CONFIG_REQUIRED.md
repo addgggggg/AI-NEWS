@@ -87,6 +87,40 @@ scripts\run_once.ps1
 scripts\run_auto.ps1
 ```
 
+## 快速切换模型
+
+查看可用模型模板：
+
+```powershell
+scripts\switch_model.ps1 -List
+```
+
+切换到某个模板：
+
+```powershell
+scripts\switch_model.ps1 -Profile deepseek
+```
+
+常用模板：
+
+```text
+deepseek
+deepseek-v4-flash
+kimi
+zhipu
+qwen-plus
+openai
+ollama-qwen
+```
+
+切换后仍需要确认 `.env` 里的 `LLM_API_KEY` 是对应服务商的 key。
+
+测试模型：
+
+```powershell
+scripts\test_model.ps1
+```
+
 ## 开机/登录后自动运行
 
 安装 Windows 登录自启动，推荐不需要管理员权限的启动文件夹方式：

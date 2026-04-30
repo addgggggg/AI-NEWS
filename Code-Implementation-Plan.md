@@ -43,6 +43,8 @@ scripts/startup_task_status.ps1
 scripts/uninstall_startup_task.ps1
 scripts/install_startup_shortcut.ps1
 scripts/uninstall_startup_shortcut.ps1
+scripts/switch_model.ps1
+scripts/test_model.ps1
 ```
 
 ## 日志规划
