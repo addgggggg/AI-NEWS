@@ -180,6 +180,66 @@ arXiv cs.AI / cs.CL / cs.LG
 
 Anthropic 官方 RSS 当前解析不稳定，默认禁用；如果后续有稳定 feed，可以再启用或替换。
 
+默认 RSS 源明细：
+
+```text
+OpenAI Blog
+https://openai.com/blog/rss.xml
+状态：启用
+
+Anthropic News
+https://www.anthropic.com/news/rss.xml
+状态：默认禁用，当前解析不稳定
+
+Google DeepMind Blog
+https://deepmind.google/blog/rss.xml
+状态：启用
+
+Hugging Face Blog
+https://huggingface.co/blog/feed.xml
+状态：启用
+
+NVIDIA Blog AI
+https://blogs.nvidia.com/blog/category/deep-learning/feed/
+状态：启用
+
+Microsoft AI Blog
+https://blogs.microsoft.com/ai/feed/
+状态：启用
+
+arXiv cs.AI
+https://export.arxiv.org/rss/cs.AI
+状态：启用
+
+arXiv cs.CL
+https://export.arxiv.org/rss/cs.CL
+状态：启用
+
+arXiv cs.LG
+https://export.arxiv.org/rss/cs.LG
+状态：启用
+```
+
+新增 RSS 信息源示例：
+
+```yaml
+rss_sources:
+  sources:
+    - name: 示例 AI Blog
+      url: "https://example.com/feed.xml"
+      weight: 1.0
+      enabled: true
+```
+
+字段说明：
+
+```text
+name：来源名称
+url：RSS/Atom feed 地址
+weight：来源权重，越高越容易进入简报
+enabled：true 启用，false 禁用
+```
+
 ## 存储策略
 
 ```text
